@@ -1246,6 +1246,32 @@ void opus_decoder_destroy(OpusDecoder *st)
    opus_free(st);
 }
 
+int opus_decoder_save_state(const OpusDecoder *st, unsigned char *dst, opus_int32 max_bytes)
+{
+   int size;
+   if (st == NULL || dst == NULL)
+      return OPUS_BAD_ARG;
+   size = opus_decoder_get_size(st->channels);
+   if (size <= 0)
+      return OPUS_BAD_ARG;
+   if (max_bytes < size)
+      return OPUS_BUFFER_TOO_SMALL;
+   OPUS_COPY(dst, (const unsigned char *)st, size);
+   return OPUS_OK;
+}
+
+int opus_decoder_load_state(OpusDecoder *st, const unsigned char *src, opus_int32 size)
+{
+   int expected;
+   if (st == NULL || src == NULL)
+      return OPUS_BAD_ARG;
+   expected = opus_decoder_get_size(st->channels);
+   if (expected <= 0 || size != expected)
+      return OPUS_BAD_ARG;
+   OPUS_COPY((unsigned char *)st, src, size);
+   return OPUS_OK;
+}
+
 
 int opus_packet_get_bandwidth(const unsigned char *data)
 {

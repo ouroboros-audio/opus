@@ -590,6 +590,33 @@ OPUS_EXPORT int opus_decoder_ctl(OpusDecoder *st, int request, ...) OPUS_ARG_NON
   */
 OPUS_EXPORT void opus_decoder_destroy(OpusDecoder *st);
 
+/** Save the internal decoder state into a byte buffer.
+  * @param [in] st <tt>OpusDecoder*</tt>: Decoder state.
+  * @param [out] dst <tt>unsigned char*</tt>: Destination buffer.
+  * @param [in] max_bytes <tt>opus_int32</tt>: Size of destination buffer in bytes.
+  * @retval #OPUS_OK Success.
+  * @retval #OPUS_BUFFER_TOO_SMALL <tt>max_bytes</tt> was insufficient.
+  * @retval #OPUS_BAD_ARG Invalid arguments.
+  */
+OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_decoder_save_state(
+    const OpusDecoder *st,
+    unsigned char *dst,
+    opus_int32 max_bytes
+) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(2);
+
+/** Restore a previously saved decoder state from a byte buffer.
+  * @param [in,out] st <tt>OpusDecoder*</tt>: Decoder state.
+  * @param [in] src <tt>unsigned char*</tt>: Source buffer.
+  * @param [in] size <tt>opus_int32</tt>: Number of bytes in source buffer.
+  * @retval #OPUS_OK Success.
+  * @retval #OPUS_BAD_ARG Invalid arguments.
+  */
+OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_decoder_load_state(
+    OpusDecoder *st,
+    const unsigned char *src,
+    opus_int32 size
+) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(2);
+
 /** Gets the size of an <code>OpusDREDDecoder</code> structure.
   * @returns The size in bytes.
   */
